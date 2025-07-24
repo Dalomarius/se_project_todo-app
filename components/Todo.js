@@ -38,7 +38,7 @@ class Todo {
     }
   }
 
-  getview() {
+  getView() {
     this._todoElement = this._templateElement.content
       .querySelector(".todo")
       .cloneNode(true);
