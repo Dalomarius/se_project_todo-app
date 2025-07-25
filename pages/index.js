@@ -5,7 +5,7 @@ import FormValidator from "../components/FormValidator.js";
 
 const addTodoButton = document.querySelector(".button_action_add");
 const addTodoPopup = document.querySelector("#add-todo-popup");
-const addTodoForm = addTodoPopup.querySelector(".popup__form");
+const addTodoForm = document.forms["add-todo-form"];
 const addTodoCloseBtn = addTodoPopup.querySelector(".popup__close");
 const todosList = document.querySelector(".todos__list");
 
@@ -17,11 +17,10 @@ const closeModal = (modal) => {
   modal.classList.remove("popup_visible");
 };
 
-
+// takes in an object representing a todo (with name, date, completed), and then it creates an html element based on that data
 const generateTodo = (data) => {
   const todo = new Todo(data, "#todo-template");
   const todoElement = todo.getView();
- 
 
   return todoElement;
 };
@@ -44,20 +43,21 @@ addTodoForm.addEventListener("submit", (evt) => {
 
   const id = uuidv4();
   const values = { name, date, id };
-  const todo = generateTodo(values);
-  todosList.append(todo);
+  renderTodo(values);
+  newTodoValidator.resetValidation();
   closeModal(addTodoPopup);
 });
 
 initialTodos.forEach((item) => {
-  const todo = generateTodo(item);
-  todosList.append(todo);
+  renderTodo(item);
 });
 
-function handleFormSubmit(evt) {
-  evt.preventDefault();
-  FormValidator.resetValidation();
-  closeModal();
+// it takes in an object representing a todo, it calls generateTodo to create and get the html element created from that object
+// and then it appends it to the page
+function renderTodo(item) {
+  const todo = generateTodo(item);
+  todosList.append(todo);
 }
+
 const newTodoValidator = new FormValidator(validationConfig, addTodoForm);
 newTodoValidator.enableValidation();
