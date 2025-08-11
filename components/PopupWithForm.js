@@ -1,22 +1,17 @@
 import Popup from "../components/Popup.js";
 
-class popupWithForm extends Popup {
+class PopupWithForm extends Popup {
   constructor({ popupSelector, handleFormSubmit }) {
     super({ popupSelector });
     this._popupForm = this._popupElement.querySelector(".popup__form");
     this._handleFormSubmit = handleFormSubmit;
+    this._inputList = this._popupForm.querySelectorAll(".popup__input");
   }
 
-  _getInputvalues() {
-    //TODO move to constructor
-    this._inputList = this._popupForm.querySelectorAll(".popup__input");
-
+  _getInputValues() {
     const values = {};
-    this._inputList.forEach ((input) => {
-        //TODO add a key/value pair to the values object for each input
-        //TODO the key is input.name
-        //TODO the value is input.value
-        //TODO need to use brackets notation, not dot notation
+    this._inputList.forEach((input) => {
+      values[input.name] = input.value;
     });
     return values;
   }
@@ -25,10 +20,9 @@ class popupWithForm extends Popup {
     this._popupForm.addEventListener("submit", (evt) => {
       evt.preventDefault();
       const inputValues = this._getInputValues();
-
       //TODO Pass result of _getInputValues to submission handlers
-      this._handleFormSubmit(evt);
+      this._handleFormSubmit(evt, inputValues);
     });
   }
 }
-export default popupWithForm;
+export default PopupWithForm;

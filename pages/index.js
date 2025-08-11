@@ -17,23 +17,23 @@ const todoCounter = new TodoCounter(initialTodos, ".counter__text");
 const addTodoPopup = new PopupWithForm({
   popupSelector: "#add-todo-popup",
   handleFormSubmit: (evt) => {
-    //TODO move code from submission handler to here
+    evt.preventDefault();
+    const name = evt.target.name.value;
+    const dateInput = evt.target.date.value;
+
+    const date = new Date(dateInput);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+
+    const id = uuidv4();
+    const values = { name, date, id };
+    renderTodo(values);
+    newTodoValidator.resetValidation();
+    addTodoPopup.close();
     console.log(evt.target.name.value);
     console.log(evt.target.date.value);
   },
 });
 addTodoPopup.setEventListeners();
-
-const section = new Section({
-  items: [], //pass initial todos
-  renderer: () => {
-    //TODO generate todo item
-    //TODO add it to the todo list
-    //TODO refer to the forEach loop in this file
-  },
-  containerSelector: ".todos__list",
-});
-// call section instances renderItems method
 
 const openModal = (modal) => {
   modal.classList.add("popup_visible");
@@ -51,55 +51,30 @@ function handleDelete(completed) {
   if (completed) {
     todoCounter.updateCompleted(false);
   }
+  //update the total
+  todoCounter.updateTotal(false);
 }
 
-// takes in an object representing a todo (with name, date, completed), and then it creates an html element based on that data
 const generateTodo = (data) => {
   const todo = new Todo(data, "#todo-template", handleCheck, handleDelete);
   const todoElement = todo.getView();
   return todoElement;
 };
 
+const section = new Section({
+  items: initialTodos,
+  renderer: renderTodo,
+  containerSelector: ".todos__list",
+});
+section.renderItems();
+
 addTodoButton.addEventListener("click", () => {
   addTodoPopup.open();
 });
 
-addTodoForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const name = evt.target.name.value;
-  const dateInput = evt.target.date.value;
-
-  const date = new Date(dateInput);
-  date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-
-  const id = uuidv4();
-  const values = { name, date, id };
-  renderTodo(values);
-  newTodoValidator.resetValidation();
-  addTodoPopup.close();
-});
-
-initialTodos.forEach((item) => {
-  renderTodo(item);
-});
-
-// it takes in an object representing a todo, it calls generateTodo to create and get the html element created from that object
-// and then it appends it to the page
 function renderTodo(item) {
-  // Create handlers
-  const handleCheck = (todoId) => {
-    console.log("Todo checked:", todoId);
-    // Add your check logic here
-  };
-
-  const handleDelete = (todoId) => {
-    console.log("Todo deleted:", todoId);
-    // Add your delete logic here
-  };
-
-  // Create Todo instance with all required parameters
-  const todo = new Todo(item, "#todo-template", handleCheck, handleDelete);
-  return todo.getView();
+  const element = generateTodo(item);
+  section.addItem(element);
 }
 
 const newTodoValidator = new FormValidator(validationConfig, addTodoForm);

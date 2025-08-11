@@ -21,31 +21,20 @@ class Todo {
   }
 
   _getTemplate() {
-    console.log("getTemplate called");
-    console.log("this._selector:", this._selector);
-
-    const templateElement = document.querySelector(this._selector);
-    console.log("templateElement found:", templateElement);
-
-    const todoElement = templateElement.content.querySelector(".todo");
-    console.log("todoElement found:", todoElement);
-
-    if (!todoElement) {
-      console.error("No .todo element found in template content");
-      return null;
-    }
-
-    return todoElement.cloneNode(true);
+    return document
+      .querySelector(this._selector)
+      .content.querySelector(".todo")
+      .cloneNode(true);
   }
 
   _generateNameEl() {
-    this._nameEl = this._todoElement.querySelector(".todo__name");
+    this._nameEl = this._element.querySelector(".todo__name");
     this._nameEl.textContent = this._name;
   }
 
   _generateDueDate() {
-    this._todoDate = this._todoElement.querySelector(".todo__date");
-    this._dueDate = new Date(this._data.date);
+    this._todoDate = this._element.querySelector(".todo__date");
+    this._dueDate = new Date(this._date);
     if (!isNaN(this._dueDate)) {
       this._todoDate.textContent = `Due: ${this._dueDate.toLocaleString(
         "en-US",
@@ -59,11 +48,11 @@ class Todo {
   }
 
   _generateCheckboxEl() {
-    this._todoCheckboxEl = this._todoElement.querySelector(".todo__completed");
-    this._todoLabel = this._todoElement.querySelector(".todo__label");
-    this._todoCheckboxEl.checked = this._data.completed;
-    this._todoCheckboxEl.id = `todo-${this._data.id}`;
-    this._todoLabel.setAttribute("for", `todo-${this._data.id}`);
+    this._todoCheckboxEl = this._element.querySelector(".todo__completed");
+    this._todoLabel = this._element.querySelector(".todo__label");
+    this._todoCheckboxEl.checked = this._completed;
+    this._todoCheckboxEl.id = `todo-${this._id}`;
+    this._todoLabel.setAttribute("for", `todo-${this._id}`);
   }
 
   _toggleCompletion = () => {
@@ -82,7 +71,7 @@ class Todo {
     this._generateCheckboxEl();
     this._setEventListeners();
     this._generateDueDate();
-    return this._todoElement;
+    return this._element;
   }
 }
 
