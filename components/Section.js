@@ -7,14 +7,12 @@ class Section {
 
   renderItems() {
     this._items.forEach((item) => {
-        this._renderer(item);
-        //call the renderer and pass it the item as an argument
-    })
+      this._renderer(item);
+    });
   }
 
   addItem(element) {
-    this._container.appendChild(element)
-    //TODO add elelment to the container
+    this._container.appendChild(element);
   }
 }
 

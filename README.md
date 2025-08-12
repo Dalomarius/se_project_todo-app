@@ -1,6 +1,5 @@
 # Simple Todo App
-
-Give a brief description of the project here. Feel free to give it a different name.
+This app is designed to help with tasks that you need to remember and keep track of doing.
 
 ## Functionality
 
